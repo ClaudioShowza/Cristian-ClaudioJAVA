@@ -1,39 +1,73 @@
-
 import java.util.ArrayList;
 import java.util.List;
 
-public class Agenda extends Pessoas {   
+public class Agenda {
 
-        private List<Pessoas> ListadeContatos;
+    private List<Pessoas> ListadeContatos;
 
-        public Agenda() {
-            this.ListadeContatos = new ArrayList<>();
+    public Agenda() {
+        this.ListadeContatos = new ArrayList<>();
+    }
+
+    public void adicionarContato(Pessoas contato) {
+        ListadeContatos.add(contato);
+    }
+
+    public Pessoas buscarContatoPorNome(String nome) {
+        for (Pessoas contato : this.ListadeContatos) {
+            if (contato.getNome().equals(nome)) {
+                return contato;
+            }
         }
+        return null;
+    }
 
-        public void adicionarPessoa(Pessoas pessoa) {
-            ListadeContatos.add(pessoa);
-        }
+    public List<Pessoas> buscarContatosPorProfissao(String profissao) {
+        List<Pessoas> contatosComProfissao = new ArrayList<>();
 
-        public Pessoas buscarPessoaPorNome(String nome) {
-
-            for (Pessoas pessoa : this.ListadeContatos) {
-                if (pessoa.getNome().equals(nome)) {
-                    return pessoa;
+        ListadeContatos.forEach(contato -> {
+            if (contato instanceof Funcionario) {
+                Funcionario funcionario = (Funcionario) contato;
+                if (funcionario.getProfissao().equals(profissao)) {
+                    contatosComProfissao.add(funcionario);
                 }
             }
-            return null;
-        }
+        });
 
-        public List<Pessoas> buscarPessoaPorProfissao(String Profissao) {
-            List<Pessoas> pessoaComProfissao = new ArrayList();
+        return contatosComProfissao;
+    }
 
-            ListadeContatos.forEach(profissional -> {
-                if (profissional.getProfissao().equals(Profissao)) {
-                    pessoaComProfissao.add(profissional);
+    public List<Funcionario> buscarFuncionariosPorDepartamento(String departamento) {
+        List<Funcionario> funcionariosNoDepartamento = new ArrayList<>();
+
+        ListadeContatos.forEach(contato -> {
+            if (contato instanceof Funcionario) {
+                Funcionario funcionario = (Funcionario) contato;
+                if (funcionario.getDepartamento().equals(departamento)) {
+                    funcionariosNoDepartamento.add(funcionario);
                 }
-            });
+            }
+        });
 
-            return pessoaComProfissao;
+        return funcionariosNoDepartamento;
+    }
+
+    public double calcularSalarioMedioFuncionarios() {
+        double totalSalario = 0;
+        int numeroFuncionarios = 0;
+
+        for (Pessoas contato : this.ListadeContatos) {
+            if (contato instanceof Funcionario) {
+                Funcionario funcionario = (Funcionario) contato;
+                totalSalario += funcionario.getSalario();
+                numeroFuncionarios++;
+            }
         }
-  
+
+        if (numeroFuncionarios > 0) {
+            return totalSalario / numeroFuncionarios;
+        } else {
+            return 0;
+        }
+    }
 }
